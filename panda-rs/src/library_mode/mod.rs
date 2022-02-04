@@ -1,6 +1,8 @@
 #[cfg(feature = "libpanda")]
 mod qcows;
 
+use panda_sys::panda_enable_memcb;
+
 use crate::PandaArgs;
 use std::fmt;
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -350,6 +352,7 @@ impl Panda {
                     panic!("libpanda cannot be run twice in the same process");
                 }
                 panda_set_library_mode(true);
+                panda_enable_memcb();
                 panda_init(args_ptrs.len() as i32, transmute(args_ptrs.as_ptr()), empty);
 
                 for cb in inventory::iter::<PPPCallbackSetup> {
